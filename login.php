@@ -1,47 +1,55 @@
 <?php
-// Start sesjon
+// Start session
 session_start();
-
 
 // Enable error reporting
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-// Database tilkoblingsdetaljer
+// Database connection details
 $servername = "172.20.128.24";
 $dbusername = "alfred";
 $dbpassword = "Gulingen03";
 $dbname = "login";
 
-// Håndterer innsending av skjema
+// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Koble til databasen
+    // Connect to the database
     $conn = new mysqli($servername, $dbusername, $dbpassword, $dbname);
     if ($conn->connect_error) {
-        die("Tilkobling mislyktes: " . $conn->connect_error);
+        die("Connection failed: " . $conn->connect_error);
     }
 
-    // Hent og rens data fra skjemaet
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password = mysqli_real_escape_string($conn, $_POST['password']);
+    // Retrieve and sanitize form data
+    $username = $conn->real_escape_string($_POST['username']);
+    $password = $conn->real_escape_string($_POST['password']);
 
-    // Sjekk om brukernavnet finnes
-    $query = "SELECT * FROM users WHERE username='$username'";
-    $result = $conn->query($query);
+    // Check if the username exists
+    $query = $conn->prepare("SELECT * FROM users WHERE username=?");
+    $query->bind_param("s", $username);
+    $query->execute();
+    $result = $query->get_result();
 
     if ($result->num_rows == 1) {
-        // Bruker funnet, verifiser passord
+        // User found, verify password
         $row = $result->fetch_assoc();
         if (password_verify($password, $row['password'])) {
-            // Passord korrekt, start sesjon
+            // Password correct, start session
             $_SESSION['username'] = $username;
-            
+            // Redirect to produkt.html
+            header("Location: produkt.html");
+            exit();
+        } else {
+            $error = "Incorrect password.";
+        }
+    } else {
+        $error = "Username not found.";
     }
 
-    // Lukk databasetilkobling
+    // Close database connection
     $conn->close();
-}}
+}
 ?>
 
 <!DOCTYPE html>
@@ -111,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="password" name="password" placeholder="Passord" required>
             </div>
             <div>
-                    <button type="submit">Login</button>
+                <button type="submit">Login</button>
             </div>
         </form>
     </div>
