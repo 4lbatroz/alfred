@@ -2,10 +2,16 @@
 // Start sesjon
 session_start();
 
+
+// Enable error reporting
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 // Database tilkoblingsdetaljer
 $servername = "172.20.128.24";
 $dbusername = "alfred";
-$dbpassword = "Gulingen03!";
+$dbpassword = "Gulingen03";
 $dbname = "login";
 
 // Håndterer innsending av skjema
@@ -105,9 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="password" name="password" placeholder="Passord" required>
             </div>
             <div>
-                <form action="home.html" method="get">
                     <button type="submit">Login</button>
-                </form>
             </div>
         </form>
     </div>
