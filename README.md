@@ -1,6 +1,6 @@
 # Nettside
 
-Bruker tetsing
+Bruker tetsing for parfyme side
 
 Oppgaver til bruker:
 1. kan du gå inn på produkt siden?
