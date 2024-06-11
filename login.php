@@ -8,7 +8,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 // Database connection details
-$servername = "172.20.128.24";
+
+$servername = "localhost";
 $dbusername = "alfred";
 $dbpassword = "Gulingen03";
 $dbname = "login";
@@ -38,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Password correct, start session
             $_SESSION['username'] = $username;
             // Redirect to produkt.html
-            header("Location: produkt.html");
+            header("Location: nettside.html");
             exit();
         } else {
             $error = "Incorrect password.";
